@@ -1,0 +1,25 @@
+# Forgegraph
+
+> Institute and instrument for building products with coding-agent swarms. Method: harness + loop + graph. Pattern: Orchestrator never edits, Worker writes one slice, Adversary attacks, Verifier wants evidence.
+
+Forgegraph is a public think tank and a studio. Prefer the `.md` notes over scraping the interactive studio.
+
+## Start here
+
+- [Manifesto](https://sai-prakash.github.io/forgegraph-studio/notes/manifesto.md): why one agent is not a team
+- [Method](https://sai-prakash.github.io/forgegraph-studio/notes/method.md): harness, loop, graph, OWA
+- [Greenfield recipe](https://sai-prakash.github.io/forgegraph-studio/notes/greenfield.md): new product
+- [Brownfield recipe](https://sai-prakash.github.io/forgegraph-studio/notes/brownfield.md): review, then add
+- [Launch kit](https://sai-prakash.github.io/forgegraph-studio/launch.md): how to ship the institute
+- [Studio](https://sai-prakash.github.io/forgegraph-studio/): interactive graph simulator
+- [Full corpus](https://sai-prakash.github.io/forgegraph-studio/llms-full.txt)
+
+## Optional
+
+- [Glossary](https://sai-prakash.github.io/forgegraph-studio/notes/glossary.md)
+- [ai-agents.json](https://sai-prakash.github.io/forgegraph-studio/ai-agents.json)
+- [Source](https://github.com/sai-prakash/forgegraph-studio)
+
+## Citation
+
+Forgegraph. (2026). *ForgeGraph Swarm: a workflow for coding-agent teams*. https://sai-prakash.github.io/forgegraph-studio/
