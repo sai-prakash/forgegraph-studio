@@ -11,7 +11,7 @@ const AI = {
     const graph = (typeof Canvas !== "undefined" && Canvas.graph) ? Canvas.graph : { nodes: [], edges: [] };
     const m = Sim.compute(Sim.config, graph);
     if (/what is forge|forgegraph in one|explain forge|teach me this lesson/.test(s)) {
-      return "ForgeGraph is a product-building workflow for coding agents. Three layers: harness (the room), loop (act-check-revise), graph (who runs next). Orchestrator never edits code. Worker writes one slice. Adversary tries to break it. Verifier accepts evidence only. Greenfield: Intake → Spec → Human Gate → Plan → Swarm → Verify. Existing repo: Analyst → Gap Detector → delta backlog, then the same swarm on only those files.";
+      return "ForgeGraph is a product-building workflow for coding agents. Three layers: harness (the room), loop (act-check-revise), graph (who runs next). Orchestrator never edits code. Worker writes one slice. Adversary tries to break it. Verifier accepts evidence only.";
     }
     if (/recipe|greenfield|new idea|how do i use|started|exist|brown|legacy|repo/.test(s)) {
       const rec = /exist|brown|started|legacy|repo/.test(s) ? RECIPES.existing : RECIPES.greenfield;
@@ -20,12 +20,12 @@ const AI = {
     }
     if (/adversary|owa|opponent|red team/.test(s)) return GLOSSARY.owa + " " + GLOSSARY.adversary;
     if (/quality|why did|moved|drop|workers/.test(s)) {
-      return "Live forecast: quality " + m.quality.toFixed(1) + "% · $" + m.cost + " · " + m.minutes + " min. Workers=" + Sim.config.workers + ", adversary=" + Sim.config.adversary + ". Three specialists usually peak.";
+      return "Live forecast: quality " + m.quality.toFixed(1) + "% · $" + m.cost + " · " + m.minutes + " min. Workers=" + Sim.config.workers + ", adversary=" + Sim.config.adversary + ".";
     }
-    if (/webllm/.test(s)) return "Pick WebLLM in Guide, click Load weights, wait for the bar to finish. Needs Chrome/Edge + WebGPU on HTTPS. First download is cached in this browser.";
+    if (/webllm/.test(s)) return "Pick WebLLM in Guide, click Load weights, wait for the bar. Chrome/Edge + WebGPU + HTTPS.";
     const hit = Object.keys(GLOSSARY).find((k) => s.includes(k));
     if (hit) return GLOSSARY[hit];
-    return "Live graph: " + graph.nodes.length + " nodes. Quality " + m.quality.toFixed(1) + "% · $" + m.cost + ". Ask what ForgeGraph is or request a recipe.";
+    return "Live graph: " + graph.nodes.length + " nodes. Quality " + m.quality.toFixed(1) + "%.";
   },
   async reply(q) {
     this.history.push({ role: "user", content: q });
@@ -60,14 +60,24 @@ const AI = {
 function webllmSystem() {
   const g = (typeof Canvas !== "undefined" && Canvas.graph) ? Canvas.graph : { nodes: [], edges: [] };
   const m = Sim.compute(Sim.config, g);
-  return "You are Forge Guide running in the browser via WebLLM. ForgeGraph = harness + loop + graph. OWA: Orchestrator never edits; Worker writes one slice; Adversary attacks; Verifier wants evidence. Live: workers=" + Sim.config.workers + " adversary=" + Sim.config.adversary + " harness=" + Sim.config.harness + " engine=" + Sim.config.engine + " quality=" + m.quality.toFixed(1) + ". Under 120 words.";
+  return "You are Forge Guide running in the browser via WebLLM. ForgeGraph = harness + loop + graph. OWA: Orchestrator never edits; Worker writes one slice; Adversary attacks; Verifier wants evidence. Live: workers=" + Sim.config.workers + " adversary=" + Sim.config.adversary + " quality=" + m.quality.toFixed(1) + ". Under 120 words.";
 }
 
 async function webllmChat(q) {
   const api = window.ForgeWebLLM;
   if (!api) throw new Error("WebLLM module is still loading. Wait a second, or click Load weights.");
-  const box = document.getElementById("webllm-status");
-  if (box && !api.ready) box.textContent = "Preparing in-browser model\u2026";
   const messages = [{ role: "system", content: webllmSystem() }].concat(AI.history.filter((h) => h.role !== "system").slice(-6));
   return api.chat(messages);
 }
+
+(function bootWebllm() {
+  const run = function () {
+    if (document.querySelector("script[data-fg-boot]")) return;
+    const s = document.createElement("script");
+    s.src = "js/webllm-boot.js";
+    s.dataset.fgBoot = "1";
+    document.body.appendChild(s);
+  };
+  if (document.body) run();
+  else document.addEventListener("DOMContentLoaded", run);
+})();
