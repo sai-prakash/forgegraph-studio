@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ForgeGraph Studio — design, simulate, learn agent swarms</title>
+  <meta name="description" content="Interactive studio for the ForgeGraph Swarm workflow. Drag agents, wire graphs, live-simulate quality/cost/time, and ask an on-device or OpenRouter guide." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/studio.css" />
+</head>
+<body>
+  <div class="splash" id="splash">
+    <div class="splash-inner">
+      <div class="mark"></div>
+      <h2>ForgeGraph Studio</h2>
+      <p>The 2026 coding-agent workflow as a living instrument. Drag a swarm. Wire a graph. Twist the knobs. Watch quality, cost, and time move. Ask the guide why.</p>
+      <button class="primary" id="enter">Enter the studio</button>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>ForgeGraph Studio</h1>
+          <span>Harness · Loop · Graph · Swarm</span>
+        </div>
+      </div>
+      <div class="modes">
+        <button class="active">Studio</button>
+        <button onclick="document.querySelector('[data-panel=learn]').click()">Learn</button>
+        <button onclick="document.querySelector('[data-panel=chat]').click()">Guide</button>
+      </div>
+      <div class="top-actions">
+        <button class="ghost" id="fit">Fit</button>
+        <button class="ghost" id="del">Delete <span class="kbd">⌫</span></button>
+        <button class="ghost" id="export">Export JSON</button>
+        <label class="ghost" style="cursor:pointer">Import<input id="import" type="file" accept="application/json" hidden /></label>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="col left">
+        <div class="col-head"><h2>Palette + knobs</h2></div>
+        <div class="col-body">
+          <div class="palette-group">
+            <h3>Presets</h3>
+            <button class="preset" data-preset="forge"><b>ForgeGraph Swarm</b><span>Full production graph</span></button>
+            <button class="preset" data-preset="owa"><b>OWA Fast Path</b><span>Orchestrator · Worker · Adversary</span></button>
+            <button class="preset" data-preset="solo"><b>Single Loop</b><span>Control case — watch quality drop</span></button>
+          </div>
+
+          <div class="palette-group">
+            <h3>Drag onto canvas</h3>
+            <div class="chip" draggable="true" data-type="intake"><i class="dot" style="background:#f0b429"></i><div><b>Intake</b><small>idea or repo</small></div></div>
+            <div class="chip" draggable="true" data-type="analyst"><i class="dot" style="background:#7dd3fc"></i><div><b>Analyst</b><small>existing code</small></div></div>
+            <div class="chip" draggable="true" data-type="gap"><i class="dot" style="background:#fb7185"></i><div><b>Gap Detector</b><small>review + add</small></div></div>
+            <div class="chip" draggable="true" data-type="research"><i class="dot" style="background:#8b7cff"></i><div><b>Researcher</b><small>parallel search</small></div></div>
+            <div class="chip" draggable="true" data-type="spec"><i class="dot" style="background:#f0b429"></i><div><b>Spec</b><small>PRD + metrics</small></div></div>
+            <div class="chip" draggable="true" data-type="planner"><i class="dot" style="background:#ffd37a"></i><div><b>Planner</b><small>cut the plan</small></div></div>
+            <div class="chip" draggable="true" data-type="architect"><i class="dot" style="background:#8b7cff"></i><div><b>Architect</b><small>modules + risks</small></div></div>
+            <div class="chip" draggable="true" data-type="orchestrator"><i class="dot" style="background:#f0b429"></i><div><b>Orchestrator</b><small>no code edits</small></div></div>
+            <div class="chip" draggable="true" data-type="worker"><i class="dot" style="background:#5eead4"></i><div><b>Worker</b><small>one slice</small></div></div>
+            <div class="chip" draggable="true" data-type="adversary"><i class="dot" style="background:#fb7185"></i><div><b>Adversary</b><small>try to break</small></div></div>
+            <div class="chip" draggable="true" data-type="debugger"><i class="dot" style="background:#fbbf24"></i><div><b>Debugger</b><small>minimal patch</small></div></div>
+            <div class="chip" draggable="true" data-type="tester"><i class="dot" style="background:#b6f05a"></i><div><b>Tester</b><small>suites</small></div></div>
+            <div class="chip" draggable="true" data-type="security"><i class="dot" style="background:#fb7185"></i><div><b>Security</b><small>red team scan</small></div></div>
+            <div class="chip" draggable="true" data-type="reviewer"><i class="dot" style="background:#7dd3fc"></i><div><b>Reviewer</b><small>one perspective</small></div></div>
+            <div class="chip" draggable="true" data-type="integrator"><i class="dot" style="background:#34d399"></i><div><b>Integrator</b><small>stitch</small></div></div>
+            <div class="chip" draggable="true" data-type="verifier"><i class="dot" style="background:#34d399"></i><div><b>Verifier</b><small>block evidence</small></div></div>
+            <div class="chip" draggable="true" data-type="hitl"><i class="dot" style="background:#fff"></i><div><b>Human Gate</b><small>approval</small></div></div>
+            <div class="chip" draggable="true" data-type="meta"><i class="dot" style="background:#8b7cff"></i><div><b>Meta</b><small>evolve graph</small></div></div>
+          </div>
+
+          <div class="palette-group">
+            <h3>Experiment</h3>
+            <div class="slider-row"><label>Workers <em id="workers-v">3</em></label><input id="workers" type="range" min="1" max="7" value="3" /></div>
+            <div class="slider-row"><label>Parallelism <em id="parallelism-v">3</em></label><input id="parallelism" type="range" min="1" max="6" value="3" /></div>
+            <div class="slider-row"><label>Harness quality <em id="harness-v">78%</em></label><input id="harness" type="range" min="20" max="100" value="78" /></div>
+            <div class="slider-row"><label>Product complexity <em id="complexity-v">6</em></label><input id="complexity" type="range" min="1" max="10" value="6" /></div>
+
+            <label class="toggle">Intake mode
+              <select id="mode"><option value="greenfield">Greenfield</option><option value="existing">Existing / review+add</option></select>
+            </label>
+            <label class="toggle">Graph engine
+              <select id="engine">
+                <option value="loop">Loop only</option>
+                <option value="langgraph" selected>LangGraph</option>
+                <option value="graphworkflow">GraphWorkflow</option>
+              </select>
+            </label>
+            <label class="toggle">Model tier
+              <select id="tier">
+                <option value="budget">Budget</option>
+                <option value="mixed" selected>Mixed</option>
+                <option value="frontier">Frontier</option>
+              </select>
+            </label>
+            <div class="toggle">Adversary <div class="switch on" id="adv"><i></i></div></div>
+            <div class="toggle">Human gates <div class="switch on" id="hitl"><i></i></div></div>
+            <div class="toggle">Context prune <div class="switch on" id="prune"><i></i></div></div>
+            <div class="toggle">Block-level verify <div class="switch on" id="bver"><i></i></div></div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="stage" id="stage">
+        <svg id="graph"></svg>
+        <div class="hud">
+          <div class="metric"><div class="k">Quality</div><div class="v" id="m-quality">—</div><div class="d" id="m-quality-d">forecast</div></div>
+          <div class="metric"><div class="k">Cost</div><div class="v" id="m-cost">—</div><div class="d" id="m-cost-d">per block</div></div>
+          <div class="metric"><div class="k">Minutes</div><div class="v" id="m-time">—</div><div class="d" id="m-time-d">wall clock</div></div>
+          <div class="metric"><div class="k">Fail risk</div><div class="v" id="m-fail">—</div><div class="d" id="m-fail-d">unchecked</div></div>
+        </div>
+        <div class="sim-bar">
+          <button class="ghost" id="slower">−</button>
+          <span class="speed" id="speed">1.0×</span>
+          <button class="ghost" id="faster">+</button>
+          <button class="primary" id="play">Simulate</button>
+          <button class="ghost" id="stop">Pause</button>
+          <button class="ghost" id="reset">Rewind</button>
+        </div>
+      </main>
+
+      <aside class="col right">
+        <div class="tabs">
+          <button class="on" data-panel="trace">Trace</button>
+          <button data-panel="learn">Learn</button>
+          <button data-panel="chat">Guide</button>
+        </div>
+        <div class="panel on" id="trace">
+          <div class="log" id="log"></div>
+        </div>
+        <div class="panel" id="learn">
+          <div class="lesson">
+            <h3 id="lesson-title">Three layers</h3>
+            <p id="lesson-body"></p>
+            <div class="step-list" id="lessons"></div>
+          </div>
+        </div>
+        <div class="panel" id="chat">
+          <div class="chat">
+            <div class="msgs" id="msgs"></div>
+            <div class="composer">
+              <div class="ai-row">
+                <select id="provider">
+                  <option value="guide">Forge Guide · free local</option>
+                  <option value="openrouter">OpenRouter</option>
+                  <option value="webllm">WebLLM · in-browser</option>
+                </select>
+              </div>
+              <div class="ai-row" id="or-wrap" style="display:none">
+                <input class="field" id="or-key" type="password" placeholder="OpenRouter API key" />
+                <button class="ghost" id="save-key">Save</button>
+                <select id="or-model">
+                  <option value="meta-llama/llama-3.1-8b-instruct:free">Llama 3.1 8B free</option>
+                  <option value="google/gemini-2.0-flash-exp:free">Gemini Flash free</option>
+                  <option value="qwen/qwen-2.5-7b-instruct:free">Qwen 2.5 7B free</option>
+                  <option value="openai/gpt-4o-mini">GPT-4o mini</option>
+                </select>
+              </div>
+              <div id="webllm-status" style="display:none;font-size:11px;color:#9a958b">WebLLM idle</div>
+              <textarea id="q" placeholder="Why did quality drop when I added a 7th worker?"></textarea>
+              <button class="primary" id="ask">Ask</button>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="statusline">
+      <i class="dotlive"></i>
+      <span>Native static studio · no build</span>
+      <span id="status-note">Ready</span>
+      <span style="margin-left:auto">Space play/pause · drag roles · ports to wire</span>
+    </footer>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
